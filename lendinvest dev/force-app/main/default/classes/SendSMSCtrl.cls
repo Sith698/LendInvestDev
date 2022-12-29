@@ -2,7 +2,7 @@
  * @description       : This Apex class provides a method for sending an SMS using the Twilio API
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             : 
- * @last modified on  : 12-28-2022
+ * @last modified on  : 12-29-2022
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 public class SendSMSCtrl {
@@ -10,9 +10,13 @@ public class SendSMSCtrl {
     @AuraEnabled
     // This method sends an SMS using the Twilio API
     public static String SendSMS(String phoneNo, String smsBody, String fromPhNumber){
+
+      List<Oauth__mdt> oA1 = [SELECT AccountSid__c, Password__c FROM Oauth__mdt LIMIT 1];
         // The account SID and auth token are used to authenticate the request to the Twilio API
-        String accountSid = 'AC27d6afba20d5c491eb273978bfd7f87a'; // you can put ACCOUNT SID from twilio account
-        String token = '0125d954dda7b6b734e6cf1beb6332b5'; // you can put AUTH TOKEN from twilio account
+        String accountSid = oA1[0].AccountSid__c; 
+        String token =  oA1[0].Password__c; 
+
+   
         // The endpoint for sending SMS messages using the Twilio API
         String endPoint = 'https://api.twilio.com/2010-04-01/Accounts/'+accountSid+'/SMS/Messages.json';
         // The credentials are encoded in base64

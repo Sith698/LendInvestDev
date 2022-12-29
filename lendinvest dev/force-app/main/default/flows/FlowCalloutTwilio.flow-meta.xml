@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
+        <description>send an error to inform the user that the flow didn&apos;t achieved</description>
+        <name>error_Flow</name>
+        <label>error Flow</label>
+        <locationX>572</locationX>
+        <locationY>408</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>flowError</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>errorSubject</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Send_sms</name>
         <label>Send sms</label>
         <locationX>308</locationX>
         <locationY>288</locationY>
         <actionName>TwilioUtil</actionName>
         <actionType>apex</actionType>
+        <faultConnector>
+            <targetReference>error_Flow</targetReference>
+        </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>ACCOUNT_SID</name>
-            <value>
-                <elementReference>accountSid</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>AUTH_TOKEN</name>
-            <value>
-                <elementReference>twilioToken</elementReference>
-            </value>
-        </inputParameters>
         <inputParameters>
             <name>message</name>
             <value>
@@ -30,12 +49,6 @@
             <name>to</name>
             <value>
                 <elementReference>$Record.ceo_Mobile__c</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>TWILIO_PHONE_NUMBER</name>
-            <value>
-                <elementReference>twilioNum</elementReference>
             </value>
         </inputParameters>
     </actionCalls>
@@ -88,25 +101,21 @@
         </scheduledPaths>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Obsolete</status>
+    <status>Active</status>
     <textTemplates>
-        <name>accountSid</name>
+        <name>errorSubject</name>
         <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;&apos;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 14px; font-family: &amp;quot;Inter var experimental&amp;quot;, &amp;quot;Inter var&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Roboto, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif; color: rgb(18, 28, 45);&quot;&gt;ACcf42f2ec36cb4499f1876925b383fa77&lt;/span&gt;&apos;&lt;/p&gt;</text>
+        <text>&lt;p&gt;Error Flow {!$Flow.InterviewGuid}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>inform user that the flow had an error</description>
+        <name>flowError</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Your flow  {!$Flow.InterviewGuid} {!$Flow.InterviewStartTime} on record {!$Flow.CurrentRecord}didn&apos;t achieved &lt;/p&gt;</text>
     </textTemplates>
     <textTemplates>
         <name>messageToCeo</name>
-        <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;&lt;strong&gt;GreatNews!&lt;/strong&gt; A customer has hit Gold.  &lt;strong style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt;{!$Record.Name}&lt;/strong&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68);&quot;&gt; &lt;/span&gt;will get VIP treatment.&lt;/p&gt;</text>
-    </textTemplates>
-    <textTemplates>
-        <name>twilioNum</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>&apos;+6188925075&apos;</text>
-    </textTemplates>
-    <textTemplates>
-        <name>twilioToken</name>
-        <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;&apos;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 14px; font-family: &amp;quot;Inter var experimental&amp;quot;, &amp;quot;Inter var&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Roboto, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif; color: rgb(18, 28, 45);&quot;&gt;fc8594397af0e223ee44250c91aa338e&lt;/span&gt;&apos;&lt;/p&gt;</text>
+        <text>GreatNews! A customer has hit Gold. {!$Record.Name} will get VIP treatment.</text>
     </textTemplates>
 </Flow>

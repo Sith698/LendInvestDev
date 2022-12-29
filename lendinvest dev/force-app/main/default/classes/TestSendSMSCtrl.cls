@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             : 
- * @last modified on  : 12-28-2022
+ * @last modified on  : 12-29-2022
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 @isTest
@@ -11,6 +11,14 @@ private class TestSendSMSCtrl {
     static void testSendSMS() {
         // Start the test
         Test.startTest();
+        // Set up the mock HTTP callout
+        HttpResponse mockResponse = new HttpResponse();
+        mockResponse.setBody('{"sid": "SM1234567890", "status": "queued"}');
+        mockResponse.setStatusCode(200);
+        HttpRequest mockRequest = new HttpRequest();
+        mockRequest.setEndpoint('https://api.twilio.com/2010-04-01/Accounts/AC1234567890/Messages.json');
+        mockRequest.setMethod('POST');
+        Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(mockResponse));
         // Set up the test data
         String phoneNo = '+1234567890';
         String smsBody = 'This is a test SMS message';
@@ -23,3 +31,5 @@ private class TestSendSMSCtrl {
         Test.stopTest();
     }
 }
+
+

@@ -2,7 +2,7 @@
  * @description       : This class provides a method for sending SMS messages using Twilio.
  * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
  * @group             : 
- * @last modified on  : 12-28-2022
+ * @last modified on  : 12-29-2022
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 public class TwilioUtil {
@@ -14,14 +14,18 @@ public class TwilioUtil {
      * @param FlowInCal   : A list of FlowInputCallout objects containing the recipient phone number and message to send.
      * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
      * @group             : 
-     * @last modified on  : 12-28-2022
+     * @last modified on  : 12-29-2022
      * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
     **/
     @InvocableMethod
     public static void sendSms(List<FlowInputCallout>FlowInCal) {
-        // Replace these with your own Twilio account SID and auth token
-        String accountSid = 'AC27d6afba20d5c491eb273978bfd7f87a';
-        String token = '0125d954dda7b6b734e6cf1beb6332b5';
+     
+        
+        List<Oauth__mdt> oA1 = [SELECT AccountSid__c, Password__c FROM Oauth__mdt LIMIT 1];
+        // The account SID and auth token are used to authenticate the request to the Twilio API
+        String accountSid = oA1[0].AccountSid__c; 
+        String token =  oA1[0].Password__c; 
+
         
         // The URL for the Twilio API endpoint for sending SMS messages
         String endPoint = 'https://api.twilio.com/2010-04-01/Accounts/'+accountSid+'/SMS/Messages.json';
